@@ -1,0 +1,109 @@
+-- Creating Database
+CREATE DATABASE MyDatabase;
+
+
+-- Createing Table
+USE May;
+
+CREATE TABLE Employees (
+    EmployeeID INT PRIMARY KEY,
+    FirstName VARCHAR(50),
+    LastName VARCHAR(50),
+    HireDate DATE,
+    DepartmentID INT
+);
+
+
+-- Inserting Data into Table
+INSERT INTO Employees(EmployeeID, FirstName, LastName, HireDate, DepartmentID ) Values (1, 'loki' ,'lokesh', '2022-07-22', 506);
+INSERT INTO Employees(EmployeeID, FirstName, LastName, HireDate, DepartmentID) VALUES (2, 'Naveen', 'Bunga', '2022-08-22', 605);
+INSERT INTO Employees (EmployeeID, FirstName, LastName, HireDate, DepartmentID)
+VALUES (3, 'Ram', 'Teja', '2023-04-01', 101),(4, 'Rakesh', 'Salumuri', '2023-10-01', 102);
+INSERT INTO Employees (EmployeeID, FirstName, LastName, HireDate, DepartmentID)
+VALUES (5, 'Prudhvi', 'Pakkurthi', '2023-01-01', 101),(6, 'Susmitha', 'Vemulapudi', '2023-02-01', 102);
+
+
+-- Querying Data from a table
+Use May;
+select * from Employees;
+
+select FirstName, HireDate from Employees;
+
+-- Updating Data in a Table
+UpDate  Employees Set FirstName = 'Loki' where FirstName = 'loki'
+
+UPDATE Employees SET HireDate = '2022-07-22'  Where FirstName = 'Susmitha'
+
+-- Delete Data from a Table
+DELETE FROM Employees WHERE FirstName = 'Anil'
+
+-- Creating Views
+
+/*   Syntax for Creating Views:
+
+CREATE VIEW ViewName AS
+SELECT Column1, Column2, ...
+FROM TableName
+WHERE Condition;		*/
+
+CREATE VIEW EmployeeNames AS
+SELECT EmployeeId, FirstName + ' ' + LastName AS FullName
+FROM Employees;
+
+-- Creating an Index
+
+CREATE INDEX idx_FirstName ON EMPLOYEES(FirstName);
+
+-- Creating a Stored Procedure
+CREATE PROCEDURE sp_add_employee
+As 
+BEGIN
+	Select * from Employees;
+	select count(FirstName) from Employees;
+	Insert into Employees(EmployeeID, FirstName, LastName, HireDate, DepartmentID) VALUES(7, 'Anil', 'Kumar', '2022-05-07', 420);
+	select * from Employees;
+	select count(FirstName) from Employees;
+END;
+
+-- Executing Stored Procedures.
+EXEC sp_add_employee
+
+-- Creating a Trigger
+--	Commnad Syntax:
+	/*			
+							CREATE TRIGGER TriggerName
+							ON TableName
+							AFTER INSERT, UPDATE, DELETE
+							AS
+							BEGIN
+								SQL Statements;
+							END;											*/
+
+CREATE TRIGGER trg_AuditEmployeeChanges
+ON Employees
+AFTER INSERT, UPDATE, DELETE
+AS 
+BEGIN
+	-- Commands to insert the change into audit table.
+	PRINT 'A change has been made to the Employees table';
+END;
+
+-- Creating a Foregin Key
+
+CREATE TABLE Departments(
+	DepartmentId INT PRIMARY KEY,
+	DepartmentName Varchar(50)
+);
+
+ALTER TABLE Employees
+ADD CONSTRAINT fk_department
+FOREIGN KEY (DepartmentId) REFERENCES Departments(DepartmentId);
+
+
+-- Dropping a Database, Table, index, View, Procedure, Trigger
+DROP DATABASE May;
+DROP TABLE Employees;
+DROP INDEX Employees.idx_lastname;
+DROP VIEW EmployeeNames;
+DROP PROCEDURE sp_add_employee;
+DROP TRIGGER trg_AuditEmployeeChanges;
